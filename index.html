@@ -1,0 +1,5895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Work Workflow</title>
+
+<style>
+:root {
+    --bg: #0b0d10;
+    --surface: #12161b;
+    --surface-2: #181d23;
+    --surface-3: #20262e;
+    --border: #2b323b;
+    --text: #f2f4f7;
+    --muted: #929aa5;
+    --accent: #8b9cff;
+    --accent-2: #6f82ff;
+    --green: #65d69a;
+    --yellow: #f3c969;
+    --red: #ef7777;
+    --focus: #778cff;
+    --break: #57c9a0;
+    --shadow: 0 15px 40px rgba(0,0,0,.25);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    min-height: 100vh;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.topbar {
+    height: 72px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(11,13,16,.92);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: var(--accent);
+    color: #080a0e;
+    font-weight: 900;
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 17px;
+    letter-spacing: -.02em;
+}
+
+.brand span {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+button {
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    border-radius: 9px;
+    padding: 9px 13px;
+    transition: .15s ease;
+}
+
+button:hover {
+    background: var(--surface-3);
+    border-color: #3b4551;
+}
+
+button.primary {
+    background: var(--accent);
+    color: #080a0e;
+    border-color: var(--accent);
+    font-weight: 700;
+}
+
+button.primary:hover {
+    background: #9ba9ff;
+}
+
+button.danger {
+    color: var(--red);
+}
+
+button.icon-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+}
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.main {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    min-height: calc(100vh - 72px);
+}
+
+.sidebar {
+    border-right: 1px solid var(--border);
+    padding: 22px 14px;
+    background: #0f1216;
+}
+
+.sidebar-section-title {
+    padding: 0 10px;
+    margin: 0 0 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: .12em;
+    font-weight: 700;
+}
+
+.template-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.template-item {
+    width: 100%;
+    text-align: left;
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 11px 10px;
+    border-radius: 9px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.template-item:hover {
+    background: var(--surface);
+}
+
+.template-item.active {
+    background: var(--surface-2);
+    border-color: var(--border);
+}
+
+.template-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.template-duration {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.empty-templates {
+    padding: 15px 10px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content {
+    min-width: 0;
+    padding: 28px;
+}
+
+.page {
+    max-width: 1450px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    margin: 0 0 6px;
+    font-size: 27px;
+    letter-spacing: -.03em;
+}
+
+.page-header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 7px;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.stat-small {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.card-header {
+    min-height: 56px;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 17px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.card-title {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.card-subtitle {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.card-body {
+    padding: 17px;
+}
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+.timeline-wrapper {
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.timeline {
+    min-width: 850px;
+}
+
+.timeline-axis {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.timeline-axis-spacer {
+    width: 180px;
+    flex: 0 0 180px;
+}
+
+.timeline-track {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.timeline-row {
+    display: flex;
+    min-height: 82px;
+    border-bottom: 1px solid rgba(43,50,59,.55);
+}
+
+.timeline-label {
+    width: 180px;
+    flex: 0 0 180px;
+    padding: 13px 12px 10px 0;
+    position: relative;
+}
+
+.timeline-label .block-type {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 5px;
+}
+
+.timeline-label .block-title {
+    font-size: 13px;
+    font-weight: 650;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.timeline-label .block-duration {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.timeline-track-row {
+    position: relative;
+    flex: 1;
+    min-width: 650px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.timeline-block {
+    height: 50px;
+    min-width: 35px;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 18px 0 13px;
+    overflow: visible;
+    user-select: none;
+    transition: box-shadow .15s ease;
+}
+
+.timeline-block.focus {
+    background: rgba(119,140,255,.18);
+    border: 1px solid rgba(119,140,255,.55);
+}
+
+.timeline-block.break {
+    background: rgba(87,201,160,.15);
+    border: 1px solid rgba(87,201,160,.5);
+}
+
+.timeline-block.current {
+    box-shadow:
+        0 0 0 2px rgba(255,255,255,.15),
+        0 0 25px rgba(119,140,255,.12);
+}
+
+.timeline-block-title {
+    font-size: 11px;
+    font-weight: 700;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.timeline-resize {
+    position: absolute;
+    right: -3px;
+    top: 0;
+    width: 9px;
+    height: 100%;
+    cursor: ew-resize;
+    border-radius: 0 8px 8px 0;
+}
+
+.timeline-resize:hover {
+    background: rgba(255,255,255,.14);
+}
+
+.timeline-delete {
+    position: absolute;
+    right: 10px;
+    top: -8px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    background: #262c34;
+    border-color: #3b424c;
+    z-index: 5;
+}
+
+.timeline-empty {
+    padding: 40px;
+    text-align: center;
+    color: var(--muted);
+}
+
+/* =========================================================
+   BLOCK EDITOR
+========================================================= */
+
+.block-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.block-editor {
+    display: grid;
+    grid-template-columns: 95px minmax(160px,1fr) 110px 36px;
+    gap: 8px;
+    align-items: center;
+    padding: 9px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.block-editor.focus-row {
+    border-left: 3px solid var(--focus);
+}
+
+.block-editor.break-row {
+    border-left: 3px solid var(--break);
+}
+
+.field {
+    width: 100%;
+    min-width: 0;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: #101419;
+    color: var(--text);
+    border-radius: 7px;
+    padding: 9px 10px;
+    outline: none;
+}
+
+.field input:focus,
+.field select:focus {
+    border-color: var(--accent);
+}
+
+.block-drag {
+    cursor: grab;
+    color: var(--muted);
+    user-select: none;
+}
+
+.add-block-row {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 12px;
+}
+
+.setting {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px;
+    background: var(--surface-2);
+}
+
+.setting label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 7px;
+}
+
+.setting select,
+.setting input {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: #101419;
+    color: var(--text);
+    border-radius: 7px;
+    padding: 9px;
+}
+
+.setting-help {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-top: 7px;
+}
+
+/* =========================================================
+   MUSIC
+========================================================= */
+
+.music-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.music-panel {
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    overflow: hidden;
+}
+
+.music-panel-header {
+    padding: 12px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.music-panel-title {
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.music-panel-title small {
+    display: block;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 3px;
+}
+
+.music-list {
+    max-height: 270px;
+    overflow-y: auto;
+    padding: 7px;
+}
+
+.music-item {
+    display: grid;
+    grid-template-columns: 28px minmax(0,1fr) auto;
+    gap: 7px;
+    align-items: center;
+    padding: 8px;
+    border-radius: 7px;
+}
+
+.music-item:hover,
+.music-item.playing {
+    background: var(--surface-3);
+}
+
+.music-index {
+    color: var(--muted);
+    font-size: 10px;
+    text-align: center;
+}
+
+.music-info {
+    min-width: 0;
+}
+
+.music-name {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-url {
+    color: var(--muted);
+    font-size: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+
+.music-controls {
+    display: flex;
+    gap: 3px;
+}
+
+.music-controls button {
+    width: 27px;
+    height: 27px;
+    padding: 0;
+    font-size: 10px;
+}
+
+.add-music {
+    padding: 9px;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 100px;
+    gap: 6px;
+}
+
+.add-music input {
+    width: 100%;
+    background: #101419;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 8px;
+    font-size: 11px;
+}
+
+/* =========================================================
+   RUN PREVIEW
+========================================================= */
+
+.preview-banner {
+    background: rgba(119,140,255,.09);
+    border: 1px solid rgba(119,140,255,.3);
+    border-radius: 11px;
+    padding: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.preview-main strong {
+    font-size: 15px;
+}
+
+.preview-main div {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.preview-controls {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+   RUN MODE
+========================================================= */
+
+.run-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: #080a0d;
+    display: none;
+    flex-direction: column;
+}
+
+.run-screen.visible {
+    display: flex;
+}
+
+.run-topbar {
+    height: 64px;
+    flex: 0 0 64px;
+    padding: 0 25px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.run-name {
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.run-mode {
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.run-layout {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 340px;
+}
+
+.run-main {
+    min-width: 0;
+    overflow: auto;
+    padding: 35px 45px;
+    display: flex;
+    flex-direction: column;
+}
+
+.current-label {
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    font-weight: 700;
+}
+
+.current-title {
+    text-align: center;
+    font-size: clamp(30px,5vw,58px);
+    font-weight: 750;
+    letter-spacing: -.045em;
+    margin: 13px 0 0;
+}
+
+.current-type {
+    text-align: center;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.timer {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(70px,13vw,155px);
+    font-weight: 300;
+    letter-spacing: -.06em;
+    line-height: 1;
+    margin: 55px 0 15px;
+}
+
+.timer.overtime {
+    color: var(--yellow);
+}
+
+.timer.finished {
+    color: var(--green);
+}
+
+.timer-status {
+    text-align: center;
+    color: var(--muted);
+    min-height: 22px;
+    font-size: 12px;
+}
+
+.run-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.run-controls button {
+    min-width: 100px;
+}
+
+.run-controls .main-control {
+    min-width: 135px;
+    font-size: 15px;
+    padding: 12px 18px;
+}
+
+.run-upcoming {
+    margin-top: auto;
+    padding-top: 35px;
+}
+
+.upcoming-title {
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: .12em;
+    font-weight: 700;
+    margin-bottom: 9px;
+}
+
+.upcoming-list {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.upcoming-item {
+    min-width: 150px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px;
+}
+
+.upcoming-item-title {
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.upcoming-item-meta {
+    color: var(--muted);
+    font-size: 9px;
+    margin-top: 4px;
+}
+
+/* =========================================================
+   RUN SIDE
+========================================================= */
+
+.run-side {
+    border-left: 1px solid var(--border);
+    background: #0e1115;
+    padding: 20px;
+    overflow: auto;
+}
+
+.run-side-section {
+    margin-bottom: 23px;
+}
+
+.run-side-title {
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: .1em;
+    font-weight: 700;
+    margin-bottom: 9px;
+}
+
+.run-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 7px;
+}
+
+.run-stat-label {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.run-stat-value {
+    font-size: 17px;
+    margin-top: 4px;
+    font-weight: 700;
+}
+
+.run-music {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.music-now {
+    height: 150px;
+    background: #060709;
+}
+
+.music-now iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.music-player-controls {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--surface);
+}
+
+.music-player-controls button {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+}
+
+.music-track-name {
+    padding: 0 11px 11px;
+    text-align: center;
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+}
+
+.music-toggle span {
+    font-size: 11px;
+}
+
+.switch {
+    position: relative;
+    width: 38px;
+    height: 21px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    inset: 0;
+    border-radius: 99px;
+    background: #303740;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.slider:before {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 3px;
+    top: 3px;
+    border-radius: 50%;
+    background: white;
+    transition: .15s;
+}
+
+.switch input:checked + .slider {
+    background: var(--accent);
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(17px);
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0,0,0,.65);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-backdrop.visible {
+    display: flex;
+}
+
+.modal {
+    width: min(470px,100%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 30px 100px rgba(0,0,0,.55);
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header strong {
+    font-size: 14px;
+}
+
+.modal-body {
+    padding: 17px;
+}
+
+.modal-body label {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 7px;
+}
+
+.modal-body input,
+.modal-body select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    background: #101419;
+    color: var(--text);
+    border-radius: 8px;
+}
+
+.modal-footer {
+    padding: 13px 17px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    z-index: 300;
+    background: #20262e;
+    border: 1px solid #3b4550;
+    color: var(--text);
+    border-radius: 9px;
+    padding: 11px 14px;
+    font-size: 12px;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: .2s;
+}
+
+.toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .music-layout,
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .run-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .run-side {
+        display: none;
+    }
+}
+
+@media (max-width: 650px) {
+    .topbar {
+        padding: 0 15px;
+    }
+
+    .content {
+        padding: 17px 12px;
+    }
+
+    .page-header {
+        flex-direction: column;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .block-editor {
+        grid-template-columns: 80px minmax(120px,1fr) 80px 36px;
+    }
+
+    .run-main {
+        padding: 25px 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">D</div>
+            <div>
+                <h1>Deep Work Workflow</h1>
+                <span>Plan deeply. Work deliberately.</span>
+            </div>
+        </div>
+
+        <div class="top-actions">
+            <button id="newTemplateBtn">+ Template</button>
+            <button id="runHeaderBtn" class="primary">Start Run</button>
+        </div>
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+        <aside class="sidebar">
+
+            <div class="sidebar-section-title">
+                Templates
+            </div>
+
+            <div id="templateList" class="template-list"></div>
+
+            <div style="margin-top:15px">
+                <button id="duplicateTemplateBtn" style="width:100%">
+                    Duplicate Template
+                </button>
+            </div>
+
+        </aside>
+
+
+        <section class="content">
+
+            <div class="page">
+
+                <div class="page-header">
+
+                    <div>
+                        <h2 id="pageTitle">Morning Routine</h2>
+                        <p id="pageSubtitle">
+                            Reusable deep work workflow template
+                        </p>
+                    </div>
+
+                    <div class="header-actions">
+                        <button id="renameBtn">Rename</button>
+                        <button id="deleteTemplateBtn" class="danger">
+                            Delete
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PRE-RUN PREVIEW
+                ================================================== -->
+
+                <div class="preview-banner">
+
+                    <div class="preview-main">
+                        <strong>Run Preview</strong>
+
+                        <div>
+                            Edit today's workflow without changing your
+                            original template.
+                        </div>
+                    </div>
+
+                    <div class="preview-controls">
+
+                        <select id="runModeSelect"
+                                style="
+                                    border:1px solid var(--border);
+                                    background:var(--surface-2);
+                                    color:var(--text);
+                                    padding:9px;
+                                    border-radius:8px;
+                                ">
+                            <option value="template">
+                                Use Template Default
+                            </option>
+
+                            <option value="strict">
+                                Strict Time
+                            </option>
+
+                            <option value="overtime">
+                                Overtime
+                            </option>
+                        </select>
+
+                        <label style="
+                            display:flex;
+                            align-items:center;
+                            gap:7px;
+                            font-size:11px;
+                            color:var(--muted);
+                        ">
+                            <input id="startMusicPreview"
+                                   type="checkbox">
+                            Start music
+                        </label>
+
+                        <button id="startPreviewBtn" class="primary">
+                            Start Workflow
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     SUMMARY
+                ================================================== -->
+
+                <div class="summary-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-label">
+                            Planned Total
+                        </div>
+
+                        <div id="totalDuration"
+                             class="stat-value">
+                            0m
+                        </div>
+
+                        <div class="stat-small">
+                            No overtime / no pauses
+                        </div>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <div class="stat-label">
+                            Estimated Finish
+                        </div>
+
+                        <div id="estimatedFinish"
+                             class="stat-value">
+                            —
+                        </div>
+
+                        <div class="stat-small">
+                            Based on planned duration
+                        </div>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <div class="stat-label">
+                            Blocks
+                        </div>
+
+                        <div id="blockCount"
+                             class="stat-value">
+                            0
+                        </div>
+
+                        <div class="stat-small">
+                            Focus + Break
+                        </div>
+                    </div>
+
+
+                    <div class="stat-card">
+                        <div class="stat-label">
+                            Default Mode
+                        </div>
+
+                        <div id="defaultModeDisplay"
+                             class="stat-value">
+                            —
+                        </div>
+
+                        <div class="stat-small">
+                            Can be overridden per run
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     TIMELINE
+                ================================================== -->
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">
+                                Workflow Timeline
+                            </div>
+
+                            <div class="card-subtitle">
+                                Drag the right edge of a block to change
+                                its duration.
+                            </div>
+                        </div>
+
+                        <div style="
+                            display:flex;
+                            gap:6px;
+                        ">
+                            <button id="addFocusBtn">
+                                + Focus
+                            </button>
+
+                            <button id="addBreakBtn">
+                                + Break
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="timeline-wrapper">
+                            <div id="timeline"
+                                 class="timeline">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     BLOCK EDITOR
+                ================================================== -->
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">
+                                Workflow Blocks
+                            </div>
+
+                            <div class="card-subtitle">
+                                Edit names and durations precisely.
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div id="blockEditor"
+                             class="block-list">
+                        </div>
+
+                        <div class="add-block-row">
+
+                            <button id="addFocusEditorBtn">
+                                + Focus Block
+                            </button>
+
+                            <button id="addBreakEditorBtn">
+                                + Break Block
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     TEMPLATE SETTINGS
+                ================================================== -->
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">
+                                Template Settings
+                            </div>
+
+                            <div class="card-subtitle">
+                                These are defaults. A run can override
+                                them without changing this template.
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="settings-grid">
+
+                            <div class="setting">
+
+                                <label>
+                                    Default Timing Mode
+                                </label>
+
+                                <select id="defaultMode">
+                                    <option value="strict">
+                                        Strict Time
+                                    </option>
+
+                                    <option value="overtime">
+                                        Overtime
+                                    </option>
+
+                                    <option value="ask">
+                                        Ask Every Time
+                                    </option>
+                                </select>
+
+                                <div class="setting-help">
+                                    Strict and Overtime start automatically.
+                                    Ask Every Time lets you choose before
+                                    each run.
+                                </div>
+
+                            </div>
+
+
+                            <div class="setting">
+
+                                <label>
+                                    Focus Playlist
+                                </label>
+
+                                <select id="focusPlaylist">
+                                </select>
+
+                                <div class="setting-help">
+                                    Used during Focus blocks.
+                                </div>
+
+                            </div>
+
+
+                            <div class="setting">
+
+                                <label>
+                                    Break Playlist
+                                </label>
+
+                                <select id="breakPlaylist">
+                                </select>
+
+                                <div class="setting-help">
+                                    Used during Break blocks.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     MUSIC LIBRARY
+                ================================================== -->
+
+                <section class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">
+                                YouTube Music Library
+                            </div>
+
+                            <div class="card-subtitle">
+                                Add YouTube video URLs. No downloading
+                                required.
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="music-layout">
+
+                            <!-- FOCUS -->
+
+                            <div class="music-panel">
+
+                                <div class="music-panel-header">
+
+                                    <div class="music-panel-title">
+                                        Focus Music
+                                        <small>
+                                            Lo-fi / ambient / instrumental
+                                        </small>
+                                    </div>
+
+                                    <button id="renameFocusPlaylistBtn">
+                                        Rename
+                                    </button>
+
+                                </div>
+
+                                <div id="focusMusicList"
+                                     class="music-list">
+                                </div>
+
+                                <div class="add-music">
+
+                                    <input
+                                        id="focusMusicUrl"
+                                        type="text"
+                                        placeholder="Paste YouTube URL">
+
+                                    <button id="addFocusMusicBtn">
+                                        Add
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- BREAK -->
+
+                            <div class="music-panel">
+
+                                <div class="music-panel-header">
+
+                                    <div class="music-panel-title">
+                                        Break Music
+                                        <small>
+                                            Energetic / entertainment
+                                        </small>
+                                    </div>
+
+                                    <button id="renameBreakPlaylistBtn">
+                                        Rename
+                                    </button>
+
+                                </div>
+
+                                <div id="breakMusicList"
+                                     class="music-list">
+                                </div>
+
+                                <div class="add-music">
+
+                                    <input
+                                        id="breakMusicUrl"
+                                        type="text"
+                                        placeholder="Paste YouTube URL">
+
+                                    <button id="addBreakMusicBtn">
+                                        Add
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     RUN SCREEN
+========================================================= -->
+
+<section id="runScreen"
+         class="run-screen">
+
+    <header class="run-topbar">
+
+        <div>
+            <div id="runTemplateName"
+                 class="run-name">
+                Deep Work
+            </div>
+
+            <div id="runModeLabel"
+                 class="run-mode">
+                Strict Time
+            </div>
+        </div>
+
+        <div style="
+            display:flex;
+            gap:7px;
+        ">
+            <button id="runRestartWorkflowBtn">
+                Restart Workflow
+            </button>
+
+            <button id="exitRunBtn">
+                Exit Focus
+            </button>
+        </div>
+
+    </header>
+
+
+    <div class="run-layout">
+
+        <main class="run-main">
+
+            <div id="currentLabel"
+                 class="current-label">
+                Current Block
+            </div>
+
+            <h1 id="currentTitle"
+                class="current-title">
+                —
+            </h1>
+
+            <div id="currentType"
+                 class="current-type">
+                —
+            </div>
+
+            <div id="timer"
+                 class="timer">
+                00:00
+            </div>
+
+            <div id="timerStatus"
+                 class="timer-status">
+            </div>
+
+            <div class="run-controls">
+
+                <button id="previousBlockBtn">
+                    ← Previous
+                </button>
+
+                <button id="resetBlockBtn">
+                    Reset
+                </button>
+
+                <button id="mainTimerBtn"
+                        class="primary main-control">
+                    Start
+                </button>
+
+                <button id="nextBlockBtn">
+                    Next →
+                </button>
+
+            </div>
+
+
+            <div class="run-upcoming">
+
+                <div class="upcoming-title">
+                    Up Next
+                </div>
+
+                <div id="upcomingList"
+                     class="upcoming-list">
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <aside class="run-side">
+
+            <!-- RUN STATS -->
+
+            <div class="run-side-section">
+
+                <div class="run-side-title">
+                    Workflow
+                </div>
+
+                <div class="run-stat">
+
+                    <div class="run-stat-label">
+                        Planned Finish
+                    </div>
+
+                    <div id="runEstimatedFinish"
+                         class="run-stat-value">
+                        —
+                    </div>
+
+                </div>
+
+                <div class="run-stat">
+
+                    <div class="run-stat-label">
+                        Planned Total
+                    </div>
+
+                    <div id="runTotal"
+                         class="run-stat-value">
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MUSIC -->
+
+            <div class="run-side-section">
+
+                <div class="run-side-title">
+                    Music
+                </div>
+
+                <div class="music-toggle">
+
+                    <span>
+                        Start / Continue Music
+                    </span>
+
+                    <label class="switch">
+                        <input id="runMusicToggle"
+                               type="checkbox">
+
+                        <span class="slider"></span>
+                    </label>
+
+                </div>
+
+
+                <div class="run-music">
+
+                    <div class="music-now">
+                        <div id="youtubePlayer"></div>
+                    </div>
+
+                    <div class="music-player-controls">
+
+                        <button id="musicPreviousBtn">
+                            ⏮
+                        </button>
+
+                        <button id="musicPlayPauseBtn"
+                                class="primary">
+                            ▶
+                        </button>
+
+                        <button id="musicNextBtn">
+                            ⏭
+                        </button>
+
+                    </div>
+
+                    <div id="musicTrackName"
+                         class="music-track-name">
+                        No music
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SHORTCUTS -->
+
+            <div class="run-side-section">
+
+                <div class="run-side-title">
+                    Shortcuts
+                </div>
+
+                <div style="
+                    display:grid;
+                    grid-template-columns:1fr 1fr;
+                    gap:6px;
+                ">
+
+                    <div class="run-stat">
+                        <div class="run-stat-label">Space</div>
+                        <div style="font-size:11px">
+                            Start / Pause
+                        </div>
+                    </div>
+
+                    <div class="run-stat">
+                        <div class="run-stat-label">N</div>
+                        <div style="font-size:11px">
+                            Next
+                        </div>
+                    </div>
+
+                    <div class="run-stat">
+                        <div class="run-stat-label">R</div>
+                        <div style="font-size:11px">
+                            Reset
+                        </div>
+                    </div>
+
+                    <div class="run-stat">
+                        <div class="run-stat-label">M</div>
+                        <div style="font-size:11px">
+                            Music
+                        </div>
+                    </div>
+
+                    <div class="run-stat">
+                        <div class="run-stat-label">← / →</div>
+                        <div style="font-size:11px">
+                            Block
+                        </div>
+                    </div>
+
+                    <div class="run-stat">
+                        <div class="run-stat-label">Esc</div>
+                        <div style="font-size:11px">
+                            Exit
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MODAL
+========================================================= -->
+
+<div id="modalBackdrop"
+     class="modal-backdrop">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <strong id="modalTitle">
+                New Template
+            </strong>
+
+            <button id="modalCloseBtn"
+                    class="icon-btn">
+                ×
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <label id="modalLabel">
+                Template name
+            </label>
+
+            <input id="modalInput"
+                   type="text"
+                   placeholder="Morning Routine">
+
+        </div>
+
+        <div class="modal-footer">
+
+            <button id="modalCancelBtn">
+                Cancel
+            </button>
+
+            <button id="modalConfirmBtn"
+                    class="primary">
+                Create
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="toast"
+     class="toast">
+</div>
+
+
+<script>
+/* =========================================================
+   DEEP WORK WORKFLOW
+   Single-file application
+========================================================= */
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+const DB_NAME = "deep-work-workflow-db";
+const DB_VERSION = 1;
+
+let db = null;
+
+let state = {
+    templates: [],
+    playlists: [],
+    settings: {
+        selectedTemplateId: null
+    }
+};
+
+let activeTemplate = null;
+
+let run = null;
+
+let timerInterval = null;
+
+let audioContext = null;
+
+let youtubePlayer = null;
+
+let youtubeReady = false;
+
+let musicState = {
+    type: "focus",
+    playlistId: null,
+    index: 0,
+    playing: false
+};
+
+let resizeState = null;
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const $ = id => document.getElementById(id);
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function uid(prefix = "id") {
+    return (
+        prefix +
+        "_" +
+        Date.now().toString(36) +
+        "_" +
+        Math.random().toString(36).slice(2, 8)
+    );
+}
+
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+
+function formatDuration(totalMinutes) {
+
+    totalMinutes = Math.max(0, Math.round(totalMinutes));
+
+    const hours = Math.floor(totalMinutes / 60);
+
+    const minutes = totalMinutes % 60;
+
+    if (hours > 0 && minutes > 0) {
+        return `${hours}h ${minutes}m`;
+    }
+
+    if (hours > 0) {
+        return `${hours}h`;
+    }
+
+    return `${minutes}m`;
+}
+
+
+function formatClock(ms) {
+
+    ms = Math.max(0, ms);
+
+    const totalSeconds = Math.floor(ms / 1000);
+
+    const hours = Math.floor(totalSeconds / 3600);
+
+    const minutes =
+        Math.floor((totalSeconds % 3600) / 60);
+
+    const seconds =
+        totalSeconds % 60;
+
+    if (hours > 0) {
+        return (
+            String(hours).padStart(2, "0") +
+            ":" +
+            String(minutes).padStart(2, "0") +
+            ":" +
+            String(seconds).padStart(2, "0")
+        );
+    }
+
+    return (
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0")
+    );
+}
+
+
+function formatTime(date) {
+
+    return date.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit"
+    });
+}
+
+
+function modeLabel(mode) {
+
+    if (mode === "strict") {
+        return "Strict Time";
+    }
+
+    if (mode === "overtime") {
+        return "Overtime";
+    }
+
+    return "Ask Every Time";
+}
+
+
+function getTotalMinutes(blocks) {
+
+    return blocks.reduce(
+        (sum, block) =>
+            sum + Number(block.durationMin || 0),
+        0
+    );
+}
+
+
+function getTemplateById(id) {
+
+    return state.templates.find(
+        template => template.id === id
+    );
+}
+
+
+/* =========================================================
+   DEFAULT DATA
+========================================================= */
+
+function createDefaultData() {
+
+    const focusPlaylist = {
+        id: uid("playlist"),
+        name: "Focus Music",
+        type: "focus",
+        tracks: []
+    };
+
+    const breakPlaylist = {
+        id: uid("playlist"),
+        name: "Break Music",
+        type: "break",
+        tracks: []
+    };
+
+    const template = {
+        id: uid("template"),
+        name: "Morning Routine",
+
+        defaultMode: "strict",
+
+        focusPlaylistId: focusPlaylist.id,
+
+        breakPlaylistId: breakPlaylist.id,
+
+        blocks: [
+            {
+                id: uid("block"),
+                type: "focus",
+                title: "Meditation",
+                durationMin: 25
+            },
+
+            {
+                id: uid("block"),
+                type: "break",
+                title: "Break",
+                durationMin: 5
+            },
+
+            {
+                id: uid("block"),
+                type: "focus",
+                title: "Journaling",
+                durationMin: 25
+            },
+
+            {
+                id: uid("block"),
+                type: "break",
+                title: "Break",
+                durationMin: 5
+            },
+
+            {
+                id: uid("block"),
+                type: "focus",
+                title: "Book Reading",
+                durationMin: 50
+            },
+
+            {
+                id: uid("block"),
+                type: "break",
+                title: "Break",
+                durationMin: 10
+            }
+        ]
+    };
+
+    state.templates = [template];
+
+    state.playlists = [
+        focusPlaylist,
+        breakPlaylist
+    ];
+
+    state.settings.selectedTemplateId =
+        template.id;
+}
+
+
+/* =========================================================
+   INDEXED DB
+========================================================= */
+
+function openDatabase() {
+
+    return new Promise((resolve, reject) => {
+
+        const request =
+            indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onupgradeneeded = event => {
+
+            const database = event.target.result;
+
+            if (!database.objectStoreNames.contains("data")) {
+
+                database.createObjectStore("data", {
+                    keyPath: "key"
+                });
+            }
+        };
+
+        request.onsuccess = event => {
+
+            db = event.target.result;
+
+            resolve(db);
+        };
+
+        request.onerror = () => {
+            reject(request.error);
+        };
+    });
+}
+
+
+function dbGet(key) {
+
+    return new Promise((resolve, reject) => {
+
+        const transaction =
+            db.transaction("data", "readonly");
+
+        const store =
+            transaction.objectStore("data");
+
+        const request =
+            store.get(key);
+
+        request.onsuccess = () => {
+
+            resolve(
+                request.result
+                    ? request.result.value
+                    : null
+            );
+        };
+
+        request.onerror = () => {
+            reject(request.error);
+        };
+    });
+}
+
+
+function dbSet(key, value) {
+
+    return new Promise((resolve, reject) => {
+
+        const transaction =
+            db.transaction("data", "readwrite");
+
+        const store =
+            transaction.objectStore("data");
+
+        const request =
+            store.put({
+                key,
+                value
+            });
+
+        request.onsuccess = () => resolve();
+
+        request.onerror = () => reject(request.error);
+    });
+}
+
+
+async function saveState() {
+
+    await dbSet("templates", state.templates);
+
+    await dbSet("playlists", state.playlists);
+
+    await dbSet("settings", state.settings);
+}
+
+
+async function loadState() {
+
+    const templates =
+        await dbGet("templates");
+
+    const playlists =
+        await dbGet("playlists");
+
+    const settings =
+        await dbGet("settings");
+
+    if (!templates || !playlists) {
+
+        createDefaultData();
+
+        await saveState();
+
+    } else {
+
+        state.templates = templates;
+
+        state.playlists = playlists;
+
+        state.settings =
+            settings || {
+                selectedTemplateId:
+                    state.templates[0]?.id || null
+            };
+    }
+
+    if (
+        !state.templates.some(
+            t =>
+                t.id ===
+                state.settings.selectedTemplateId
+        )
+    ) {
+
+        state.settings.selectedTemplateId =
+            state.templates[0]?.id || null;
+    }
+
+    activeTemplate =
+        getTemplateById(
+            state.settings.selectedTemplateId
+        );
+
+    renderAll();
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer = null;
+
+function showToast(message) {
+
+    const toast = $("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("visible");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+
+        toast.classList.remove("visible");
+
+    }, 2300);
+}
+
+
+/* =========================================================
+   TEMPLATE LIST
+========================================================= */
+
+function renderTemplateList() {
+
+    const container =
+        $("templateList");
+
+    container.innerHTML = "";
+
+    if (!state.templates.length) {
+
+        container.innerHTML = `
+            <div class="empty-templates">
+                No templates yet.
+                Create your first workflow.
+            </div>
+        `;
+
+        return;
+    }
+
+    state.templates.forEach(template => {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "template-item" +
+            (
+                template.id === activeTemplate?.id
+                    ? " active"
+                    : ""
+            );
+
+        const total =
+            getTotalMinutes(template.blocks);
+
+        button.innerHTML = `
+            <span class="template-name">
+                ${escapeHtml(template.name)}
+            </span>
+
+            <span class="template-duration">
+                ${formatDuration(total)}
+            </span>
+        `;
+
+        button.onclick = () => {
+
+            selectTemplate(template.id);
+        };
+
+        container.appendChild(button);
+    });
+}
+
+
+function selectTemplate(id) {
+
+    activeTemplate =
+        getTemplateById(id);
+
+    if (!activeTemplate) {
+        return;
+    }
+
+    state.settings.selectedTemplateId =
+        id;
+
+    saveState();
+
+    renderAll();
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+/* =========================================================
+   RENDER ALL
+========================================================= */
+
+function renderAll() {
+
+    renderTemplateList();
+
+    renderHeader();
+
+    renderSummary();
+
+    renderTimeline();
+
+    renderBlockEditor();
+
+    renderTemplateSettings();
+
+    renderMusicLibrary();
+
+    updateRunPreviewMode();
+}
+
+
+function renderHeader() {
+
+    if (!activeTemplate) {
+        return;
+    }
+
+    $("pageTitle").textContent =
+        activeTemplate.name;
+
+    $("pageSubtitle").textContent =
+        `${activeTemplate.blocks.length} blocks · reusable workflow template`;
+}
+
+
+function renderSummary() {
+
+    if (!activeTemplate) {
+        return;
+    }
+
+    const total =
+        getTotalMinutes(activeTemplate.blocks);
+
+    $("totalDuration").textContent =
+        formatDuration(total);
+
+    $("blockCount").textContent =
+        activeTemplate.blocks.length;
+
+    $("defaultModeDisplay").textContent =
+        modeLabel(activeTemplate.defaultMode);
+
+    const finish =
+        new Date(
+            Date.now() +
+            total * 60 * 1000
+        );
+
+    $("estimatedFinish").textContent =
+        formatTime(finish);
+}
+
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+function renderTimeline() {
+
+    const container =
+        $("timeline");
+
+    container.innerHTML = "";
+
+    if (!activeTemplate.blocks.length) {
+
+        container.innerHTML = `
+            <div class="timeline-empty">
+                Add a Focus or Break block to build
+                your workflow.
+            </div>
+        `;
+
+        return;
+    }
+
+    const total =
+        getTotalMinutes(activeTemplate.blocks);
+
+    const axis =
+        document.createElement("div");
+
+    axis.className =
+        "timeline-axis";
+
+    axis.innerHTML = `
+        <div class="timeline-axis-spacer"></div>
+        <div class="timeline-track">
+            <span>0m</span>
+            <span style="margin-left:auto">
+                ${formatDuration(total)}
+            </span>
+        </div>
+    `;
+
+    container.appendChild(axis);
+
+    activeTemplate.blocks.forEach(
+        (block, index) => {
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "timeline-row";
+
+            const label =
+                document.createElement("div");
+
+            label.className =
+                "timeline-label";
+
+            label.innerHTML = `
+                <div class="block-type"
+                     style="
+                        color:${block.type === "focus"
+                            ? "var(--focus)"
+                            : "var(--break)"
+                     }">
+                    ${block.type}
+                </div>
+
+                <div class="block-title">
+                    ${escapeHtml(block.title)}
+                </div>
+
+                <div class="block-duration">
+                    ${block.durationMin} min
+                </div>
+            `;
+
+            const track =
+                document.createElement("div");
+
+            track.className =
+                "timeline-track-row";
+
+            const timelineBlock =
+                document.createElement("div");
+
+            timelineBlock.className =
+                `timeline-block ${block.type}`;
+
+            const percentage =
+                (block.durationMin / total) *
+                100;
+
+            timelineBlock.style.width =
+                `${percentage}%`;
+
+            timelineBlock.innerHTML = `
+                <div class="timeline-block-title">
+                    ${escapeHtml(block.title)}
+                </div>
+
+                <div class="timeline-resize"
+                     data-id="${block.id}">
+                </div>
+
+                <button class="timeline-delete"
+                        title="Delete block">
+                    ×
+                </button>
+            `;
+
+            if (
+                run &&
+                run.blockIndex === index &&
+                $("runScreen").classList.contains("visible")
+            ) {
+
+                timelineBlock.classList.add(
+                    "current"
+                );
+            }
+
+            const deleteButton =
+                timelineBlock.querySelector(
+                    ".timeline-delete"
+                );
+
+            deleteButton.onclick = event => {
+
+                event.stopPropagation();
+
+                deleteBlock(block.id);
+            };
+
+            const resizeHandle =
+                timelineBlock.querySelector(
+                    ".timeline-resize"
+                );
+
+            resizeHandle.addEventListener(
+                "pointerdown",
+                event => {
+
+                    event.preventDefault();
+
+                    startResize(
+                        event,
+                        block.id,
+                        track
+                    );
+                }
+            );
+
+            track.appendChild(timelineBlock);
+
+            row.appendChild(label);
+
+            row.appendChild(track);
+
+            container.appendChild(row);
+        }
+    );
+}
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+function startResize(
+    event,
+    blockId,
+    track
+) {
+
+    const block =
+        activeTemplate.blocks.find(
+            b => b.id === blockId
+        );
+
+    if (!block) {
+        return;
+    }
+
+    resizeState = {
+        blockId,
+        startX: event.clientX,
+        originalDuration:
+            Number(block.durationMin),
+        trackWidth:
+            track.getBoundingClientRect().width
+    };
+
+    document.body.style.userSelect =
+        "none";
+
+    window.addEventListener(
+        "pointermove",
+        handleResize
+    );
+
+    window.addEventListener(
+        "pointerup",
+        stopResize,
+        {
+            once: true
+        }
+    );
+}
+
+
+function handleResize(event) {
+
+    if (!resizeState) {
+        return;
+    }
+
+    const block =
+        activeTemplate.blocks.find(
+            b =>
+                b.id ===
+                resizeState.blockId
+        );
+
+    if (!block) {
+        return;
+    }
+
+    const total =
+        getTotalMinutes(
+            activeTemplate.blocks
+        );
+
+    const pixelsPerMinute =
+        resizeState.trackWidth /
+        Math.max(total, 1);
+
+    const deltaPixels =
+        event.clientX -
+        resizeState.startX;
+
+    const deltaMinutes =
+        Math.round(
+            deltaPixels /
+            pixelsPerMinute
+        );
+
+    block.durationMin =
+        clamp(
+            resizeState.originalDuration +
+                deltaMinutes,
+            1,
+            240
+        );
+
+    renderTimeline();
+
+    renderBlockEditor();
+
+    renderSummary();
+
+    renderTemplateList();
+}
+
+
+async function stopResize() {
+
+    if (!resizeState) {
+        return;
+    }
+
+    resizeState = null;
+
+    document.body.style.userSelect =
+        "";
+
+    window.removeEventListener(
+        "pointermove",
+        handleResize
+    );
+
+    await saveState();
+}
+
+
+/* =========================================================
+   BLOCK EDITOR
+========================================================= */
+
+function renderBlockEditor() {
+
+    const container =
+        $("blockEditor");
+
+    container.innerHTML = "";
+
+    activeTemplate.blocks.forEach(
+        (block, index) => {
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                `block-editor ${block.type}-row`;
+
+            row.draggable = true;
+
+            row.dataset.index = index;
+
+            row.innerHTML = `
+                <div class="block-drag"
+                     title="Drag to reorder">
+                    ☷
+                    ${index + 1}
+                </div>
+
+                <div class="field">
+                    <input
+                        type="text"
+                        value="${escapeHtml(block.title)}"
+                        placeholder="Block name"
+                        data-field="title">
+                </div>
+
+                <div class="field">
+                    <input
+                        type="number"
+                        min="1"
+                        max="240"
+                        value="${block.durationMin}"
+                        data-field="duration">
+                </div>
+
+                <button
+                    class="icon-btn danger"
+                    title="Delete">
+                    ×
+                </button>
+            `;
+
+            const titleInput =
+                row.querySelector(
+                    '[data-field="title"]'
+                );
+
+            titleInput.addEventListener(
+                "input",
+                () => {
+
+                    block.title =
+                        titleInput.value;
+
+                    renderTimeline();
+
+                    saveState();
+                }
+            );
+
+            const durationInput =
+                row.querySelector(
+                    '[data-field="duration"]'
+                );
+
+            durationInput.addEventListener(
+                "change",
+                () => {
+
+                    block.durationMin =
+                        clamp(
+                            Number(
+                                durationInput.value
+                            ) || 1,
+                            1,
+                            240
+                        );
+
+                    durationInput.value =
+                        block.durationMin;
+
+                    renderTimeline();
+
+                    renderSummary();
+
+                    renderTemplateList();
+
+                    saveState();
+                }
+            );
+
+            const deleteButton =
+                row.querySelector(
+                    ".icon-btn"
+                );
+
+            deleteButton.onclick = () => {
+
+                deleteBlock(block.id);
+            };
+
+
+            /* Drag reorder */
+
+            row.addEventListener(
+                "dragstart",
+                event => {
+
+                    event.dataTransfer.setData(
+                        "text/plain",
+                        String(index)
+                    );
+                }
+            );
+
+            row.addEventListener(
+                "dragover",
+                event => {
+
+                    event.preventDefault();
+                }
+            );
+
+            row.addEventListener(
+                "drop",
+                event => {
+
+                    event.preventDefault();
+
+                    const from =
+                        Number(
+                            event.dataTransfer.getData(
+                                "text/plain"
+                            )
+                        );
+
+                    const to = index;
+
+                    if (
+                        Number.isInteger(from) &&
+                        from !== to
+                    ) {
+
+                        const moved =
+                            activeTemplate.blocks
+                                .splice(
+                                    from,
+                                    1
+                                )[0];
+
+                        activeTemplate.blocks
+                            .splice(
+                                to,
+                                0,
+                                moved
+                            );
+
+                        saveState();
+
+                        renderAll();
+                    }
+                }
+            );
+
+            container.appendChild(row);
+        }
+    );
+}
+
+
+/* =========================================================
+   ADD / DELETE BLOCKS
+========================================================= */
+
+function addBlock(type) {
+
+    if (!activeTemplate) {
+        return;
+    }
+
+    const count =
+        activeTemplate.blocks.length + 1;
+
+    activeTemplate.blocks.push({
+        id: uid("block"),
+        type,
+        title:
+            type === "focus"
+                ? `Focus ${count}`
+                : "Break",
+        durationMin:
+            type === "focus"
+                ? 25
+                : 5
+    });
+
+    saveState();
+
+    renderAll();
+}
+
+
+function deleteBlock(id) {
+
+    if (!activeTemplate) {
+        return;
+    }
+
+    if (activeTemplate.blocks.length <= 1) {
+
+        showToast(
+            "A workflow needs at least one block."
+        );
+
+        return;
+    }
+
+    activeTemplate.blocks =
+        activeTemplate.blocks.filter(
+            block => block.id !== id
+        );
+
+    saveState();
+
+    renderAll();
+}
+
+
+/* =========================================================
+   TEMPLATE SETTINGS
+========================================================= */
+
+function renderTemplateSettings() {
+
+    if (!activeTemplate) {
+        return;
+    }
+
+    $("defaultMode").value =
+        activeTemplate.defaultMode;
+
+    populatePlaylistSelects();
+}
+
+
+$("defaultMode").addEventListener(
+    "change",
+    async () => {
+
+        activeTemplate.defaultMode =
+            $("defaultMode").value;
+
+        await saveState();
+
+        renderSummary();
+
+        updateRunPreviewMode();
+
+        showToast("Template default saved.");
+    }
+);
+
+
+function populatePlaylistSelects() {
+
+    const focusSelect =
+        $("focusPlaylist");
+
+    const breakSelect =
+        $("breakPlaylist");
+
+    focusSelect.innerHTML = "";
+
+    breakSelect.innerHTML = "";
+
+    state.playlists.forEach(
+        playlist => {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                playlist.id;
+
+            option.textContent =
+                playlist.name;
+
+            if (
+                playlist.id ===
+                activeTemplate.focusPlaylistId
+            ) {
+
+                option.selected = true;
+            }
+
+            focusSelect.appendChild(
+                option.cloneNode(true)
+            );
+
+            if (
+                playlist.id ===
+                activeTemplate.breakPlaylistId
+            ) {
+
+                option.selected = true;
+            }
+
+            breakSelect.appendChild(
+                option
+            );
+        }
+    );
+
+    if (
+        !state.playlists.some(
+            p =>
+                p.id ===
+                activeTemplate.focusPlaylistId
+        )
+    ) {
+
+        activeTemplate.focusPlaylistId =
+            state.playlists.find(
+                p => p.type === "focus"
+            )?.id ||
+            state.playlists[0]?.id;
+    }
+
+    if (
+        !state.playlists.some(
+            p =>
+                p.id ===
+                activeTemplate.breakPlaylistId
+        )
+    ) {
+
+        activeTemplate.breakPlaylistId =
+            state.playlists.find(
+                p => p.type === "break"
+            )?.id ||
+            state.playlists[0]?.id;
+    }
+
+    focusSelect.value =
+        activeTemplate.focusPlaylistId || "";
+
+    breakSelect.value =
+        activeTemplate.breakPlaylistId || "";
+}
+
+
+$("focusPlaylist").addEventListener(
+    "change",
+    async () => {
+
+        activeTemplate.focusPlaylistId =
+            $("focusPlaylist").value;
+
+        await saveState();
+    }
+);
+
+
+$("breakPlaylist").addEventListener(
+    "change",
+    async () => {
+
+        activeTemplate.breakPlaylistId =
+            $("breakPlaylist").value;
+
+        await saveState();
+    }
+);
+
+
+/* =========================================================
+   PLAYLIST HELPERS
+========================================================= */
+
+function getPlaylist(id) {
+
+    return state.playlists.find(
+        playlist =>
+            playlist.id === id
+    );
+}
+
+
+function extractYouTubeId(url) {
+
+    try {
+
+        const parsed =
+            new URL(url);
+
+        if (
+            parsed.hostname.includes(
+                "youtube.com"
+            )
+        ) {
+
+            if (
+                parsed.pathname ===
+                "/watch"
+            ) {
+
+                return parsed.searchParams.get(
+                    "v"
+                );
+            }
+
+            if (
+                parsed.pathname.startsWith(
+                    "/shorts/"
+                )
+            ) {
+
+                return parsed.pathname
+                    .split("/")[2];
+            }
+
+            if (
+                parsed.pathname.startsWith(
+                    "/embed/"
+                )
+            ) {
+
+                return parsed.pathname
+                    .split("/")[2];
+            }
+        }
+
+        if (
+            parsed.hostname ===
+            "youtu.be"
+        ) {
+
+            return parsed.pathname
+                .slice(1)
+                .split("?")[0];
+        }
+
+    } catch (error) {
+
+        return null;
+    }
+
+    return null;
+}
+
+
+/* =========================================================
+   MUSIC LIBRARY RENDER
+========================================================= */
+
+function renderMusicLibrary() {
+
+    const focusPlaylist =
+        getPlaylist(
+            activeTemplate.focusPlaylistId
+        );
+
+    const breakPlaylist =
+        getPlaylist(
+            activeTemplate.breakPlaylistId
+        );
+
+    renderPlaylistTracks(
+        $("focusMusicList"),
+        focusPlaylist
+    );
+
+    renderPlaylistTracks(
+        $("breakMusicList"),
+        breakPlaylist
+    );
+}
+
+
+function renderPlaylistTracks(
+    container,
+    playlist
+) {
+
+    container.innerHTML = "";
+
+    if (
+        !playlist ||
+        !playlist.tracks.length
+    ) {
+
+        container.innerHTML = `
+            <div style="
+                padding:20px 10px;
+                text-align:center;
+                color:var(--muted);
+                font-size:11px;
+            ">
+                No music yet.<br>
+                Add a YouTube URL below.
+            </div>
+        `;
+
+        return;
+    }
+
+    playlist.tracks.forEach(
+        (track, index) => {
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "music-item";
+
+            row.innerHTML = `
+                <div class="music-index">
+                    ${index + 1}
+                </div>
+
+                <div class="music-info">
+                    <div class="music-name">
+                        ${escapeHtml(track.title)}
+                    </div>
+
+                    <div class="music-url">
+                        ${escapeHtml(track.url)}
+                    </div>
+                </div>
+
+                <div class="music-controls">
+
+                    <button
+                        title="Play"
+                        data-action="play">
+                        ▶
+                    </button>
+
+                    <button
+                        title="Move up"
+                        data-action="up">
+                        ↑
+                    </button>
+
+                    <button
+                        title="Move down"
+                        data-action="down">
+                        ↓
+                    </button>
+
+                    <button
+                        title="Delete"
+                        data-action="delete">
+                        ×
+                    </button>
+
+                </div>
+            `;
+
+            row.querySelector(
+                '[data-action="play"]'
+            ).onclick = () => {
+
+                playPlaylistTrack(
+                    playlist.id,
+                    index
+                );
+            };
+
+            row.querySelector(
+                '[data-action="up"]'
+            ).onclick = () => {
+
+                moveTrack(
+                    playlist.id,
+                    index,
+                    -1
+                );
+            };
+
+            row.querySelector(
+                '[data-action="down"]'
+            ).onclick = () => {
+
+                moveTrack(
+                    playlist.id,
+                    index,
+                    1
+                );
+            };
+
+            row.querySelector(
+                '[data-action="delete"]'
+            ).onclick = () => {
+
+                deleteTrack(
+                    playlist.id,
+                    index
+                );
+            };
+
+            container.appendChild(row);
+        }
+    );
+}
+
+
+/* =========================================================
+   ADD MUSIC
+========================================================= */
+
+$("addFocusMusicBtn").onclick =
+    () => {
+
+        addYouTubeTrack(
+            "focus",
+            $("focusMusicUrl").value
+        );
+    };
+
+
+$("addBreakMusicBtn").onclick =
+    () => {
+
+        addYouTubeTrack(
+            "break",
+            $("breakMusicUrl").value
+        );
+    };
+
+
+async function addYouTubeTrack(
+    type,
+    url
+) {
+
+    url = url.trim();
+
+    if (!url) {
+        showToast("Paste a YouTube URL first.");
+        return;
+    }
+
+    const videoId =
+        extractYouTubeId(url);
+
+    if (!videoId) {
+
+        showToast(
+            "That does not look like a valid YouTube video URL."
+        );
+
+        return;
+    }
+
+    const playlistId =
+        type === "focus"
+            ? activeTemplate.focusPlaylistId
+            : activeTemplate.breakPlaylistId;
+
+    const playlist =
+        getPlaylist(playlistId);
+
+    if (!playlist) {
+        return;
+    }
+
+    playlist.tracks.push({
+        id: uid("track"),
+        videoId,
+        url,
+        title:
+            `YouTube Video ${playlist.tracks.length + 1}`
+    });
+
+    await saveState();
+
+    if (type === "focus") {
+        $("focusMusicUrl").value = "";
+    } else {
+        $("breakMusicUrl").value = "";
+    }
+
+    renderMusicLibrary();
+
+    showToast("YouTube music added.");
+}
+
+
+/* =========================================================
+   TRACK MANAGEMENT
+========================================================= */
+
+async function moveTrack(
+    playlistId,
+    index,
+    direction
+) {
+
+    const playlist =
+        getPlaylist(playlistId);
+
+    if (!playlist) {
+        return;
+    }
+
+    const target =
+        index + direction;
+
+    if (
+        target < 0 ||
+        target >= playlist.tracks.length
+    ) {
+        return;
+    }
+
+    [
+        playlist.tracks[index],
+        playlist.tracks[target]
+    ] = [
+        playlist.tracks[target],
+        playlist.tracks[index]
+    ];
+
+    await saveState();
+
+    renderMusicLibrary();
+}
+
+
+async function deleteTrack(
+    playlistId,
+    index
+) {
+
+    const playlist =
+        getPlaylist(playlistId);
+
+    if (!playlist) {
+        return;
+    }
+
+    playlist.tracks.splice(index, 1);
+
+    await saveState();
+
+    renderMusicLibrary();
+}
+
+
+/* =========================================================
+   PLAYLIST RENAME
+========================================================= */
+
+$("renameFocusPlaylistBtn").onclick =
+    () => {
+
+        const playlist =
+            getPlaylist(
+                activeTemplate.focusPlaylistId
+            );
+
+        openTextModal(
+            "Rename Focus Playlist",
+            playlist?.name || "Focus Music",
+            async value => {
+
+                if (!value.trim()) {
+                    return;
+                }
+
+                playlist.name =
+                    value.trim();
+
+                await saveState();
+
+                renderAll();
+            }
+        );
+    };
+
+
+$("renameBreakPlaylistBtn").onclick =
+    () => {
+
+        const playlist =
+            getPlaylist(
+                activeTemplate.breakPlaylistId
+            );
+
+        openTextModal(
+            "Rename Break Playlist",
+            playlist?.name || "Break Music",
+            async value => {
+
+                if (!value.trim()) {
+                    return;
+                }
+
+                playlist.name =
+                    value.trim();
+
+                await saveState();
+
+                renderAll();
+            }
+        );
+    };
+
+
+/* =========================================================
+   TEMPLATE CREATION
+========================================================= */
+
+$("newTemplateBtn").onclick =
+    () => {
+
+        openTextModal(
+            "New Template",
+            "My Deep Work",
+            async value => {
+
+                const name =
+                    value.trim();
+
+                if (!name) {
+                    return;
+                }
+
+                const focusPlaylist = {
+                    id: uid("playlist"),
+                    name: `${name} — Focus`,
+                    type: "focus",
+                    tracks: []
+                };
+
+                const breakPlaylist = {
+                    id: uid("playlist"),
+                    name: `${name} — Break`,
+                    type: "break",
+                    tracks: []
+                };
+
+                const template = {
+                    id: uid("template"),
+                    name,
+
+                    defaultMode: "strict",
+
+                    focusPlaylistId:
+                        focusPlaylist.id,
+
+                    breakPlaylistId:
+                        breakPlaylist.id,
+
+                    blocks: [
+                        {
+                            id: uid("block"),
+                            type: "focus",
+                            title: "Focus",
+                            durationMin: 25
+                        },
+
+                        {
+                            id: uid("block"),
+                            type: "break",
+                            title: "Break",
+                            durationMin: 5
+                        }
+                    ]
+                };
+
+                state.playlists.push(
+                    focusPlaylist,
+                    breakPlaylist
+                );
+
+                state.templates.push(
+                    template
+                );
+
+                state.settings.selectedTemplateId =
+                    template.id;
+
+                activeTemplate =
+                    template;
+
+                await saveState();
+
+                renderAll();
+
+                showToast(
+                    "Template created."
+                );
+            }
+        );
+    };
+
+
+/* =========================================================
+   DUPLICATE TEMPLATE
+========================================================= */
+
+$("duplicateTemplateBtn").onclick =
+    async () => {
+
+        if (!activeTemplate) {
+            return;
+        }
+
+        const cloned =
+            JSON.parse(
+                JSON.stringify(
+                    activeTemplate
+                )
+            );
+
+        cloned.id =
+            uid("template");
+
+        cloned.name =
+            `${activeTemplate.name} Copy`;
+
+        cloned.blocks =
+            cloned.blocks.map(
+                block => ({
+                    ...block,
+                    id: uid("block")
+                })
+            );
+
+        const oldFocus =
+            getPlaylist(
+                activeTemplate.focusPlaylistId
+            );
+
+        const oldBreak =
+            getPlaylist(
+                activeTemplate.breakPlaylistId
+            );
+
+        const focusPlaylist = {
+            id: uid("playlist"),
+            name: `${cloned.name} — Focus`,
+            type: "focus",
+            tracks:
+                JSON.parse(
+                    JSON.stringify(
+                        oldFocus?.tracks || []
+                    )
+                ).map(
+                    track => ({
+                        ...track,
+                        id: uid("track")
+                    })
+                )
+        };
+
+        const breakPlaylist = {
+            id: uid("playlist"),
+            name: `${cloned.name} — Break`,
+            type: "break",
+            tracks:
+                JSON.parse(
+                    JSON.stringify(
+                        oldBreak?.tracks || []
+                    )
+                ).map(
+                    track => ({
+                        ...track,
+                        id: uid("track")
+                    })
+                )
+        };
+
+        cloned.focusPlaylistId =
+            focusPlaylist.id;
+
+        cloned.breakPlaylistId =
+            breakPlaylist.id;
+
+        state.playlists.push(
+            focusPlaylist,
+            breakPlaylist
+        );
+
+        state.templates.push(
+            cloned
+        );
+
+        state.settings.selectedTemplateId =
+            cloned.id;
+
+        activeTemplate =
+            cloned;
+
+        await saveState();
+
+        renderAll();
+
+        showToast("Template duplicated.");
+    };
+
+
+/* =========================================================
+   RENAME TEMPLATE
+========================================================= */
+
+$("renameBtn").onclick =
+    () => {
+
+        if (!activeTemplate) {
+            return;
+        }
+
+        openTextModal(
+            "Rename Template",
+            activeTemplate.name,
+            async value => {
+
+                if (!value.trim()) {
+                    return;
+                }
+
+                activeTemplate.name =
+                    value.trim();
+
+                await saveState();
+
+                renderAll();
+            }
+        );
+    };
+
+
+/* =========================================================
+   DELETE TEMPLATE
+========================================================= */
+
+$("deleteTemplateBtn").onclick =
+    async () => {
+
+        if (!activeTemplate) {
+            return;
+        }
+
+        if (state.templates.length <= 1) {
+
+            showToast(
+                "Keep at least one template."
+            );
+
+            return;
+        }
+
+        const confirmed =
+            confirm(
+                `Delete "${activeTemplate.name}"?`
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        const focusId =
+            activeTemplate.focusPlaylistId;
+
+        const breakId =
+            activeTemplate.breakPlaylistId;
+
+        state.templates =
+            state.templates.filter(
+                t =>
+                    t.id !==
+                    activeTemplate.id
+            );
+
+        state.playlists =
+            state.playlists.filter(
+                p =>
+                    p.id !== focusId &&
+                    p.id !== breakId
+            );
+
+        activeTemplate =
+            state.templates[0];
+
+        state.settings.selectedTemplateId =
+            activeTemplate.id;
+
+        await saveState();
+
+        renderAll();
+
+        showToast("Template deleted.");
+    };
+
+
+/* =========================================================
+   ADD BUTTONS
+========================================================= */
+
+$("addFocusBtn").onclick =
+    () => addBlock("focus");
+
+$("addBreakBtn").onclick =
+    () => addBlock("break");
+
+$("addFocusEditorBtn").onclick =
+    () => addBlock("focus");
+
+$("addBreakEditorBtn").onclick =
+    () => addBlock("break");
+
+
+/* =========================================================
+   PRE-RUN MODE
+========================================================= */
+
+function updateRunPreviewMode() {
+
+    if (!activeTemplate) {
+        return;
+    }
+
+    const select =
+        $("runModeSelect");
+
+    if (
+        activeTemplate.defaultMode ===
+        "ask"
+    ) {
+
+        select.value = "strict";
+
+    } else {
+
+        select.value = "template";
+    }
+}
+
+
+$("runModeSelect").addEventListener(
+    "change",
+    () => {
+
+        if (
+            $("runModeSelect").value ===
+            "template"
+        ) {
+
+            showToast(
+                `Using template default: ${modeLabel(activeTemplate.defaultMode)}`
+            );
+        }
+    }
+);
+
+
+/* =========================================================
+   START RUN
+========================================================= */
+
+$("startPreviewBtn").onclick =
+    () => {
+
+        startRunFromTemplate();
+    };
+
+
+$("runHeaderBtn").onclick =
+    () => {
+
+        startRunFromTemplate();
+    };
+
+
+function getSelectedRunMode() {
+
+    const selected =
+        $("runModeSelect").value;
+
+    if (selected === "strict") {
+        return "strict";
+    }
+
+    if (selected === "overtime") {
+        return "overtime";
+    }
+
+    if (
+        activeTemplate.defaultMode ===
+        "ask"
+    ) {
+
+        return "strict";
+    }
+
+    return activeTemplate.defaultMode;
+}
+
+
+function startRunFromTemplate() {
+
+    if (
+        !activeTemplate ||
+        !activeTemplate.blocks.length
+    ) {
+
+        showToast(
+            "Add at least one block first."
+        );
+
+        return;
+    }
+
+    /*
+        IMPORTANT:
+
+        The run receives a COPY of the template.
+        Any future run-specific editing can therefore
+        happen without changing the saved template.
+    */
+
+    const runBlocks =
+        JSON.parse(
+            JSON.stringify(
+                activeTemplate.blocks
+            )
+        );
+
+    const mode =
+        getSelectedRunMode();
+
+    run = {
+        id: uid("run"),
+
+        templateId:
+            activeTemplate.id,
+
+        templateName:
+            activeTemplate.name,
+
+        blocks:
+            runBlocks,
+
+        mode,
+
+        blockIndex: 0,
+
+        elapsedMs: 0,
+
+        overtimeMs: 0,
+
+        running: false,
+
+        completed: false,
+
+        startMusic:
+            $("startMusicPreview").checked,
+
+        startedAt: null,
+
+        pausedAt: null
+    };
+
+    openRunScreen();
+
+    updateRunUI();
+
+    if (run.startMusic) {
+
+        $("runMusicToggle").checked =
+            true;
+
+        startMusicForCurrentBlock(
+            true
+        );
+    }
+}
+
+
+/* =========================================================
+   OPEN / EXIT RUN
+========================================================= */
+
+function openRunScreen() {
+
+    $("runScreen")
+        .classList.add("visible");
+
+    document.body.style.overflow =
+        "hidden";
+}
+
+
+function closeRunScreen() {
+
+    stopTimer();
+
+    $("runScreen")
+        .classList.remove("visible");
+
+    document.body.style.overflow =
+        "";
+
+    document.title =
+        "Deep Work Workflow";
+
+    run = null;
+}
+
+
+/* =========================================================
+   RUN TIMER
+========================================================= */
+
+function startTimer() {
+
+    if (!run || run.completed) {
+        return;
+    }
+
+    unlockAudio();
+
+    run.running = true;
+
+    run.startedAt =
+        Date.now();
+
+    run.pausedAt = null;
+
+    timerInterval =
+        setInterval(
+            timerTick,
+            250
+        );
+
+    updateRunUI();
+}
+
+
+function pauseTimer() {
+
+    if (!run || !run.running) {
+        return;
+    }
+
+    run.running = false;
+
+    run.pausedAt =
+        Date.now();
+
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+
+    pauseMusic();
+
+    saveRunState();
+
+    updateRunUI();
+}
+
+
+function stopTimer() {
+
+    clearInterval(timerInterval);
+
+    timerInterval = null;
+}
+
+
+function timerTick() {
+
+    if (!run || !run.running) {
+        return;
+    }
+
+    run.elapsedMs += 250;
+
+    const plannedMs =
+        run.blocks[
+            run.blockIndex
+        ].durationMin *
+        60 *
+        1000;
+
+    if (
+        run.mode === "overtime"
+    ) {
+
+        if (
+            run.elapsedMs ===
+            plannedMs
+        ) {
+
+            playChime(2);
+
+            run.overtimeMs = 0;
+
+            updateRunUI();
+        }
+
+        if (
+            run.elapsedMs >
+            plannedMs
+        ) {
+
+            run.overtimeMs =
+                run.elapsedMs -
+                plannedMs;
+        }
+
+    } else {
+
+        if (
+            run.elapsedMs >=
+            plannedMs
+        ) {
+
+            run.elapsedMs =
+                plannedMs;
+
+            completeCurrentBlockStrict();
+        }
+    }
+
+    updateRunUI();
+}
+
+
+/* =========================================================
+   OVERTIME COMPLETION
+========================================================= */
+
+function completeCurrentBlockStrict() {
+
+    if (!run || run.completed) {
+        return;
+    }
+
+    playChime(2);
+
+    const isLast =
+        run.blockIndex >=
+        run.blocks.length - 1;
+
+    if (isLast) {
+
+        run.completed = true;
+
+        run.running = false;
+
+        stopTimer();
+
+        pauseMusic();
+
+        showToast(
+            "Workflow complete."
+        );
+
+        return;
+    }
+
+    run.blockIndex++;
+
+    run.elapsedMs = 0;
+
+    run.overtimeMs = 0;
+
+    startMusicForCurrentBlock(
+        true
+    );
+}
+
+
+/* =========================================================
+   MANUAL NEXT
+========================================================= */
+
+function nextBlock() {
+
+    if (!run) {
+        return;
+    }
+
+    if (
+        run.blockIndex >=
+        run.blocks.length - 1
+    ) {
+
+        if (
+            run.elapsedMs >=
+            run.blocks[
+                run.blockIndex
+            ].durationMin *
+            60 *
+            1000
+        ) {
+
+            finishRun();
+        } else {
+
+            showToast(
+                "This is the final block."
+            );
+        }
+
+        return;
+    }
+
+    run.blockIndex++;
+
+    run.elapsedMs = 0;
+
+    run.overtimeMs = 0;
+
+    run.running = true;
+
+    run.startedAt = Date.now();
+
+    stopTimer();
+
+    timerInterval =
+        setInterval(
+            timerTick,
+            250
+        );
+
+    startMusicForCurrentBlock(
+        true
+    );
+
+    saveRunState();
+
+    updateRunUI();
+}
+
+
+function previousBlock() {
+
+    if (!run) {
+        return;
+    }
+
+    if (run.blockIndex <= 0) {
+
+        showToast(
+            "Already at first block."
+        );
+
+        return;
+    }
+
+    run.blockIndex--;
+
+    run.elapsedMs = 0;
+
+    run.overtimeMs = 0;
+
+    run.running = true;
+
+    stopTimer();
+
+    timerInterval =
+        setInterval(
+            timerTick,
+            250
+        );
+
+    startMusicForCurrentBlock(
+        true
+    );
+
+    saveRunState();
+
+    updateRunUI();
+}
+
+
+/* =========================================================
+   RESET CURRENT BLOCK
+========================================================= */
+
+function resetCurrentBlock() {
+
+    if (!run) {
+        return;
+    }
+
+    run.elapsedMs = 0;
+
+    run.overtimeMs = 0;
+
+    if (!run.running) {
+
+        run.running = true;
+
+        stopTimer();
+
+        timerInterval =
+            setInterval(
+                timerTick,
+                250
+            );
+    }
+
+    startMusicForCurrentBlock(
+        true
+    );
+
+    saveRunState();
+
+    updateRunUI();
+}
+
+
+/* =========================================================
+   RESTART WORKFLOW
+========================================================= */
+
+$("runRestartWorkflowBtn").onclick =
+    () => {
+
+        if (!run) {
+            return;
+        }
+
+        const shouldRestart =
+            confirm(
+                "Restart this workflow from the first block?"
+            );
+
+        if (!shouldRestart) {
+            return;
+        }
+
+        run.blockIndex = 0;
+
+        run.elapsedMs = 0;
+
+        run.overtimeMs = 0;
+
+        run.completed = false;
+
+        run.running = true;
+
+        stopTimer();
+
+        timerInterval =
+            setInterval(
+                timerTick,
+                250
+            );
+
+        startMusicForCurrentBlock(
+            true
+        );
+
+        updateRunUI();
+    };
+
+
+/* =========================================================
+   FINISH
+========================================================= */
+
+function finishRun() {
+
+    if (!run) {
+        return;
+    }
+
+    run.completed = true;
+
+    run.running = false;
+
+    stopTimer();
+
+    pauseMusic();
+
+    updateRunUI();
+}
+
+
+/* =========================================================
+   MAIN TIMER BUTTON
+========================================================= */
+
+$("mainTimerBtn").onclick =
+    () => {
+
+        if (!run) {
+            return;
+        }
+
+        if (run.completed) {
+
+            restartCurrentWorkflow();
+
+            return;
+        }
+
+        if (run.running) {
+
+            pauseTimer();
+
+        } else {
+
+            startTimer();
+
+            /*
+                If music toggle is ON, start music
+                when timer starts.
+            */
+
+            if (
+                $("runMusicToggle").checked
+            ) {
+
+                playMusic();
+            }
+        }
+    };
+
+
+function restartCurrentWorkflow() {
+
+    if (!run) {
+        return;
+    }
+
+    run.blockIndex = 0;
+
+    run.elapsedMs = 0;
+
+    run.overtimeMs = 0;
+
+    run.completed = false;
+
+    run.running = true;
+
+    stopTimer();
+
+    timerInterval =
+        setInterval(
+            timerTick,
+            250
+        );
+
+    startMusicForCurrentBlock(
+        true
+    );
+
+    updateRunUI();
+}
+
+
+/* =========================================================
+   RUN UI
+========================================================= */
+
+function updateRunUI() {
+
+    if (!run) {
+        return;
+    }
+
+    const block =
+        run.blocks[
+            run.blockIndex
+        ];
+
+    if (!block) {
+        return;
+    }
+
+    $("runTemplateName").textContent =
+        run.templateName;
+
+    $("runModeLabel").textContent =
+        modeLabel(run.mode);
+
+    $("currentTitle").textContent =
+        block.title;
+
+    $("currentType").textContent =
+        block.type === "focus"
+            ? "Focus"
+            : "Break";
+
+    const plannedMs =
+        block.durationMin *
+        60 *
+        1000;
+
+    const overtime =
+        Math.max(
+            0,
+            run.elapsedMs -
+            plannedMs
+        );
+
+    const timer =
+        $("timer");
+
+    timer.classList.remove(
+        "overtime",
+        "finished"
+    );
+
+    if (
+        run.mode === "overtime" &&
+        run.elapsedMs >= plannedMs
+    ) {
+
+        timer.textContent =
+            "+" +
+            formatClock(overtime);
+
+        timer.classList.add(
+            "overtime"
+        );
+
+        $("timerStatus").textContent =
+            "Overtime · Press Next to continue.";
+
+    } else {
+
+        const remaining =
+            plannedMs -
+            run.elapsedMs;
+
+        timer.textContent =
+            formatClock(remaining);
+
+        if (run.completed) {
+
+            timer.textContent =
+                "00:00";
+
+            timer.classList.add(
+                "finished"
+            );
+
+            $("timerStatus").textContent =
+                "Workflow complete.";
+
+        } else if (run.running) {
+
+            $("timerStatus").textContent =
+                "Running";
+
+        } else {
+
+            $("timerStatus").textContent =
+                "Paused";
+        }
+    }
+
+    $("mainTimerBtn").textContent =
+        run.completed
+            ? "Start Again"
+            : run.running
+                ? "Pause"
+                : "Start";
+
+
+    const total =
+        getTotalMinutes(run.blocks);
+
+    $("runTotal").textContent =
+        formatDuration(total);
+
+    const estimatedFinish =
+        new Date(
+            Date.now() +
+            getRemainingPlannedMinutes(run) *
+            60 *
+            1000
+        );
+
+    $("runEstimatedFinish").textContent =
+        formatTime(estimatedFinish);
+
+    renderUpcoming();
+
+    updateTabTitle();
+}
+
+
+function getRemainingPlannedMinutes(run) {
+
+    if (!run) {
+        return 0;
+    }
+
+    let total = 0;
+
+    for (
+        let i = run.blockIndex;
+        i < run.blocks.length;
+        i++
+    ) {
+
+        total +=
+            Number(
+                run.blocks[i].durationMin
+            );
+    }
+
+    /*
+        Remove elapsed time from current block.
+        This is ONLY for displaying a fresh
+        approximate remaining finish time.
+    */
+
+    const current =
+        run.blocks[
+            run.blockIndex
+        ];
+
+    const elapsedMinutes =
+        run.elapsedMs /
+        60000;
+
+    total -= Math.min(
+        elapsedMinutes,
+        Number(current.durationMin)
+    );
+
+    return Math.max(0, total);
+}
+
+
+/* =========================================================
+   UPCOMING
+========================================================= */
+
+function renderUpcoming() {
+
+    const container =
+        $("upcomingList");
+
+    container.innerHTML = "";
+
+    if (!run) {
+        return;
+    }
+
+    run.blocks
+        .slice(
+            run.blockIndex + 1,
+            run.blockIndex + 5
+        )
+        .forEach(block => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "upcoming-item";
+
+            item.innerHTML = `
+                <div class="upcoming-item-title">
+                    ${escapeHtml(block.title)}
+                </div>
+
+                <div class="upcoming-item-meta">
+                    ${block.type}
+                    ·
+                    ${block.durationMin}m
+                </div>
+            `;
+
+            container.appendChild(item);
+        });
+
+    if (!container.children.length) {
+
+        container.innerHTML = `
+            <div style="
+                color:var(--muted);
+                font-size:11px;
+            ">
+                No more blocks.
+            </div>
+        `;
+    }
+}
+
+
+/* =========================================================
+   TAB TITLE
+========================================================= */
+
+function updateTabTitle() {
+
+    if (!run) {
+        return;
+    }
+
+    const block =
+        run.blocks[
+            run.blockIndex
+        ];
+
+    if (!block) {
+        return;
+    }
+
+    const plannedMs =
+        block.durationMin *
+        60000;
+
+    if (
+        run.mode === "overtime" &&
+        run.elapsedMs >= plannedMs
+    ) {
+
+        document.title =
+            `+${formatClock(
+                run.elapsedMs -
+                plannedMs
+            )} — ${block.title}`;
+
+    } else {
+
+        document.title =
+            `${formatClock(
+                plannedMs -
+                run.elapsedMs
+            )} — ${block.title}`;
+    }
+}
+
+
+/* =========================================================
+   MUSIC SYSTEM
+========================================================= */
+
+/*
+    YouTube IFrame API
+
+    We load the API dynamically. The player is used only
+    when a YouTube track is selected.
+
+    Browser autoplay policies can still prevent playback
+    in some circumstances. Starting music from a user click
+    (Start Workflow) gives the browser the best possible
+    chance to allow it.
+*/
+
+function loadYouTubeAPI() {
+
+    if (
+        document.getElementById(
+            "youtube-api-script"
+        )
+    ) {
+        return;
+    }
+
+    const script =
+        document.createElement("script");
+
+    script.id =
+        "youtube-api-script";
+
+    script.src =
+        "https://www.youtube.com/iframe_api";
+
+    document.head.appendChild(script);
+}
+
+
+window.onYouTubeIframeAPIReady =
+    function() {
+
+        youtubeReady = true;
+
+        createYouTubePlayer();
+    };
+
+
+function createYouTubePlayer() {
+
+    if (
+        !youtubeReady ||
+        youtubePlayer
+    ) {
+        return;
+    }
+
+    youtubePlayer =
+        new YT.Player(
+            "youtubePlayer",
+            {
+                height: "100%",
+                width: "100%",
+                videoId: "",
+
+                playerVars: {
+                    autoplay: 0,
+                    controls: 1,
+                    rel: 0,
+                    modestbranding: 1,
+                    playsinline: 1
+                },
+
+                events: {
+                    onStateChange:
+                        handleYouTubeStateChange
+                }
+            }
+        );
+}
+
+
+function playPlaylistTrack(
+    playlistId,
+    index
+) {
+
+    const playlist =
+        getPlaylist(playlistId);
+
+    if (
+        !playlist ||
+        !playlist.tracks[index]
+    ) {
+        return;
+    }
+
+    musicState.playlistId =
+        playlistId;
+
+    musicState.index =
+        index;
+
+    musicState.type =
+        playlist.type;
+
+    const track =
+        playlist.tracks[index];
+
+    if (
+        youtubeReady &&
+        youtubePlayer
+    ) {
+
+        youtubePlayer.loadVideoById(
+            track.videoId
+        );
+
+        youtubePlayer.playVideo();
+
+        musicState.playing = true;
+
+        updateMusicUI();
+    } else {
+
+        loadYouTubeAPI();
+
+        showToast(
+            "YouTube player is loading..."
+        );
+    }
+}
+
+
+function playMusic() {
+
+    if (!run) {
+        return;
+    }
+
+    if (
+        youtubePlayer &&
+        musicState.playlistId
+    ) {
+
+        youtubePlayer.playVideo();
+
+        musicState.playing = true;
+
+        updateMusicUI();
+
+        return;
+    }
+
+    startMusicForCurrentBlock(false);
+}
+
+
+function pauseMusic() {
+
+    if (
+        youtubePlayer &&
+        musicState.playing
+    ) {
+
+        youtubePlayer.pauseVideo();
+    }
+
+    musicState.playing = false;
+
+    updateMusicUI();
+}
+
+
+function nextMusicTrack() {
+
+    const playlist =
+        getPlaylist(
+            musicState.playlistId
+        );
+
+    if (
+        !playlist ||
+        !playlist.tracks.length
+    ) {
+        return;
+    }
+
+    const next =
+        musicState.index + 1;
+
+    if (
+        next >=
+        playlist.tracks.length
+    ) {
+
+        musicState.index = 0;
+
+    } else {
+
+        musicState.index = next;
+    }
+
+    const track =
+        playlist.tracks[
+            musicState.index
+        ];
+
+    if (
+        youtubePlayer &&
+        youtubeReady
+    ) {
+
+        youtubePlayer.loadVideoById(
+            track.videoId
+        );
+
+        youtubePlayer.playVideo();
+
+        musicState.playing = true;
+
+        updateMusicUI();
+    }
+}
+
+
+function previousMusicTrack() {
+
+    const playlist =
+        getPlaylist(
+            musicState.playlistId
+        );
+
+    if (
+        !playlist ||
+        !playlist.tracks.length
+    ) {
+        return;
+    }
+
+    const previous =
+        musicState.index - 1;
+
+    if (previous < 0) {
+
+        musicState.index =
+            playlist.tracks.length - 1;
+
+    } else {
+
+        musicState.index = previous;
+    }
+
+    const track =
+        playlist.tracks[
+            musicState.index
+        ];
+
+    if (
+        youtubePlayer &&
+        youtubeReady
+    ) {
+
+        youtubePlayer.loadVideoById(
+            track.videoId
+        );
+
+        youtubePlayer.playVideo();
+
+        musicState.playing = true;
+
+        updateMusicUI();
+    }
+}
+
+
+function startMusicForCurrentBlock(
+    forcePlay
+) {
+
+    if (!run) {
+        return;
+    }
+
+    if (
+        !$("runMusicToggle").checked &&
+        !forcePlay
+    ) {
+        return;
+    }
+
+    const block =
+        run.blocks[
+            run.blockIndex
+        ];
+
+    const playlistId =
+        block.type === "focus"
+            ? activeTemplate.focusPlaylistId
+            : activeTemplate.breakPlaylistId;
+
+    const playlist =
+        getPlaylist(playlistId);
+
+    if (
+        !playlist ||
+        !playlist.tracks.length
+    ) {
+
+        $("musicTrackName").textContent =
+            block.type === "focus"
+                ? "No Focus Music"
+                : "No Break Music";
+
+        return;
+    }
+
+    /*
+        If the current music belongs to another playlist,
+        start from the beginning of this block's playlist.
+    */
+
+    if (
+        musicState.playlistId !==
+        playlistId
+    ) {
+
+        musicState.playlistId =
+            playlistId;
+
+        musicState.index = 0;
+
+        musicState.type =
+            playlist.type;
+    }
+
+    const track =
+        playlist.tracks[
+            musicState.index
+        ];
+
+    if (
+        youtubeReady &&
+        youtubePlayer
+    ) {
+
+        youtubePlayer.loadVideoById(
+            track.videoId
+        );
+
+        youtubePlayer.playVideo();
+
+        musicState.playing = true;
+
+        updateMusicUI();
+
+    } else {
+
+        loadYouTubeAPI();
+
+        $("musicTrackName").textContent =
+            track.title;
+
+        /*
+            The user can press Play after
+            the API has finished loading.
+        */
+
+        showToast(
+            "YouTube player is loading..."
+        );
+    }
+}
+
+
+/*
+    When a YouTube video finishes, move to the next
+    track in the same playlist automatically.
+*/
+
+function handleYouTubeStateChange(event) {
+
+    if (
+        event.data ===
+        YT.PlayerState.ENDED
+    ) {
+
+        nextMusicTrack();
+
+    } else if (
+        event.data ===
+        YT.PlayerState.PLAYING
+    ) {
+
+        musicState.playing = true;
+
+        updateMusicUI();
+
+    } else if (
+        event.data ===
+        YT.PlayerState.PAUSED
+    ) {
+
+        musicState.playing = false;
+
+        updateMusicUI();
+    }
+}
+
+
+function updateMusicUI() {
+
+    const playlist =
+        getPlaylist(
+            musicState.playlistId
+        );
+
+    const track =
+        playlist?.tracks[
+            musicState.index
+        ];
+
+    $("musicTrackName").textContent =
+        track?.title ||
+        "No music";
+
+    $("musicPlayPauseBtn").textContent =
+        musicState.playing
+            ? "⏸"
+            : "▶";
+}
+
+
+$("musicPlayPauseBtn").onclick =
+    () => {
+
+        if (
+            musicState.playing
+        ) {
+
+            pauseMusic();
+
+        } else {
+
+            playMusic();
+        }
+    };
+
+
+$("musicNextBtn").onclick =
+    () => {
+
+        nextMusicTrack();
+    };
+
+
+$("musicPreviousBtn").onclick =
+    () => {
+
+        previousMusicTrack();
+    };
+
+
+$("runMusicToggle").addEventListener(
+    "change",
+    event => {
+
+        if (
+            event.target.checked
+        ) {
+
+            playMusic();
+
+        } else {
+
+            pauseMusic();
+        }
+    }
+);
+
+
+/* =========================================================
+   YOUTUBE PLAYER INITIALIZATION
+========================================================= */
+
+loadYouTubeAPI();
+
+
+/* =========================================================
+   AUDIO NOTIFICATION
+========================================================= */
+
+function unlockAudio() {
+
+    if (!audioContext) {
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+    }
+
+    if (
+        audioContext.state ===
+        "suspended"
+    ) {
+
+        audioContext.resume();
+    }
+}
+
+
+function playChime(repeat = 2) {
+
+    unlockAudio();
+
+    if (!audioContext) {
+        return;
+    }
+
+    const ctx =
+        audioContext;
+
+    const now =
+        ctx.currentTime;
+
+    const frequencies = [
+        523.25,
+        659.25,
+        783.99
+    ];
+
+    for (
+        let r = 0;
+        r < repeat;
+        r++
+    ) {
+
+        const base =
+            now +
+            r * 1.05;
+
+        frequencies.forEach(
+            (
+                frequency,
+                index
+            ) => {
+
+                const oscillator =
+                    ctx.createOscillator();
+
+                const gain =
+                    ctx.createGain();
+
+                oscillator.type =
+                    "sine";
+
+                oscillator.frequency
+                    .setValueAtTime(
+                        frequency,
+                        base +
+                        index * .16
+                    );
+
+                gain.gain.setValueAtTime(
+                    0.0001,
+                    base +
+                    index * .16
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    0.28,
+                    base +
+                    index * .16 +
+                    0.025
+                );
+
+                gain.gain.exponentialRampToValueAtTime(
+                    0.0001,
+                    base +
+                    index * .16 +
+                    0.55
+                );
+
+                oscillator.connect(gain);
+
+                gain.connect(
+                    ctx.destination
+                );
+
+                oscillator.start(
+                    base +
+                    index * .16
+                );
+
+                oscillator.stop(
+                    base +
+                    index * .16 +
+                    0.6
+                );
+            }
+        );
+    }
+}
+
+
+/*
+    Unlock audio on first user interaction.
+*/
+
+document.addEventListener(
+    "pointerdown",
+    unlockAudio,
+    {
+        once: true
+    }
+);
+
+document.addEventListener(
+    "keydown",
+    unlockAudio,
+    {
+        once: true
+    }
+);
+
+
+/* =========================================================
+   RUN BUTTONS
+========================================================= */
+
+$("nextBlockBtn").onclick =
+    () => {
+
+        nextBlock();
+    };
+
+
+$("previousBlockBtn").onclick =
+    () => {
+
+        previousBlock();
+    };
+
+
+$("resetBlockBtn").onclick =
+    () => {
+
+        resetCurrentBlock();
+    };
+
+
+$("exitRunBtn").onclick =
+    () => {
+
+        closeRunScreen();
+    };
+
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            !$("runScreen")
+                .classList
+                .contains("visible")
+        ) {
+            return;
+        }
+
+        const tag =
+            document.activeElement?.tagName;
+
+        const isTyping =
+            tag === "INPUT" ||
+            tag === "TEXTAREA" ||
+            tag === "SELECT" ||
+            document.activeElement?.isContentEditable;
+
+        if (isTyping) {
+            return;
+        }
+
+        if (event.code === "Space") {
+
+            event.preventDefault();
+
+            $("mainTimerBtn").click();
+
+            return;
+        }
+
+        if (
+            event.key === "n" ||
+            event.key === "N"
+        ) {
+
+            nextBlock();
+
+            return;
+        }
+
+        if (
+            event.key === "r" ||
+            event.key === "R"
+        ) {
+
+            resetCurrentBlock();
+
+            return;
+        }
+
+        if (
+            event.key === "m" ||
+            event.key === "M"
+        ) {
+
+            $("runMusicToggle").click();
+
+            return;
+        }
+
+        if (event.key === "ArrowRight") {
+
+            nextBlock();
+
+            return;
+        }
+
+        if (event.key === "ArrowLeft") {
+
+            previousBlock();
+
+            return;
+        }
+
+        if (event.key === "Escape") {
+
+            closeRunScreen();
+
+            return;
+        }
+    }
+);
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+let modalCallback = null;
+
+function openTextModal(
+    title,
+    value,
+    callback
+) {
+
+    $("modalTitle").textContent =
+        title;
+
+    $("modalInput").value =
+        value || "";
+
+    $("modalConfirmBtn").textContent =
+        title.startsWith("New")
+            ? "Create"
+            : "Save";
+
+    modalCallback =
+        callback;
+
+    $("modalBackdrop")
+        .classList.add("visible");
+
+    setTimeout(
+        () => {
+
+            $("modalInput").focus();
+
+            $("modalInput").select();
+
+        },
+        20
+    );
+}
+
+
+function closeModal() {
+
+    $("modalBackdrop")
+        .classList.remove("visible");
+
+    modalCallback = null;
+}
+
+
+$("modalCloseBtn").onclick =
+    closeModal;
+
+
+$("modalCancelBtn").onclick =
+    closeModal;
+
+
+$("modalConfirmBtn").onclick =
+    async () => {
+
+        const value =
+            $("modalInput").value;
+
+        const callback =
+            modalCallback;
+
+        closeModal();
+
+        if (callback) {
+
+            await callback(value);
+        }
+    };
+
+
+$("modalBackdrop").addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            $("modalBackdrop")
+        ) {
+
+            closeModal();
+        }
+    }
+);
+
+
+$("modalInput").addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            $("modalConfirmBtn").click();
+        }
+
+        if (event.key === "Escape") {
+
+            closeModal();
+        }
+    }
+);
+
+
+/* =========================================================
+   SAVE RUN STATE
+========================================================= */
+
+async function saveRunState() {
+
+    if (!run) {
+        return;
+    }
+
+    await dbSet(
+        "currentRun",
+        run
+    );
+}
+
+
+/* =========================================================
+   RESTORE RUN
+========================================================= */
+
+async function restoreRun() {
+
+    const saved =
+        await dbGet("currentRun");
+
+    /*
+        We intentionally restore the run as PAUSED.
+
+        This prevents a browser reload from unexpectedly
+        continuing the timer in the background.
+    */
+
+    if (
+        !saved ||
+        saved.completed
+    ) {
+        return;
+    }
+
+    run = saved;
+
+    run.running = false;
+
+    openRunScreen();
+
+    updateRunUI();
+
+    showToast(
+        "Previous workflow restored in paused state."
+    );
+}
+
+
+/* =========================================================
+   PERIODIC SAVE
+========================================================= */
+
+setInterval(
+    () => {
+
+        if (run) {
+            saveRunState();
+        }
+
+    },
+    2000
+);
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+async function init() {
+
+    try {
+
+        await openDatabase();
+
+        await loadState();
+
+        await restoreRun();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "Could not initialize local storage."
+        );
+    }
+}
+
+
+init();
+
+</script>
+
+</body>
+</html>
