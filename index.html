@@ -4766,17 +4766,24 @@
         }
       }
 
-      function startMusicForCurrentBlock(forcePlay) {
+      function startMusicForCurrentBlock() {
         if (!run) {
-          return;
-        }
-
-        if (!$("runMusicToggle").checked && !forcePlay) {
           return;
         }
 
         const block = run.blocks[run.blockIndex];
 
+        if (!block) {
+          return;
+        }
+
+        /*
+         * Always determine the playlist for the CURRENT block.
+         *
+         * This happens even when Music is OFF.
+         * That way, Focus -> Break silently changes
+         * the internal playlist.
+         */
         const playlistId =
           block.type === "focus"
             ? activeTemplate.focusPlaylistId
@@ -4785,30 +4792,46 @@
         const playlist = getPlaylist(playlistId);
 
         if (!playlist || !playlist.tracks.length) {
+          musicState.playlistId = playlistId;
+          musicState.index = 0;
+          musicState.type = block.type;
+
           $("musicTrackName").textContent =
             block.type === "focus" ? "No Focus Music" : "No Break Music";
+
+          pauseMusic();
 
           return;
         }
 
         /*
-        If the current music belongs to another playlist,
-        start from the beginning of this block's playlist.
-    */
-
+         * IMPORTANT:
+         * Change playlist even when Music is OFF.
+         */
         if (musicState.playlistId !== playlistId) {
           musicState.playlistId = playlistId;
-
           musicState.index = 0;
-
           musicState.type = playlist.type;
         }
 
         const track = playlist.tracks[musicState.index];
 
+        /*
+         * Music OFF:
+         * Playlist is already synchronized above,
+         * but absolutely nothing should play.
+         */
+        if (!$("runMusicToggle").checked) {
+          pauseMusic();
+          return;
+        }
+
+        /*
+         * Music ON:
+         * Play the CURRENT block's playlist.
+         */
         if (youtubeReady && youtubePlayer) {
           youtubePlayer.loadVideoById(track.videoId);
-
           youtubePlayer.playVideo();
 
           musicState.playing = true;
@@ -4819,10 +4842,9 @@
 
           $("musicTrackName").textContent = track.title;
 
-          /*
-            The user can press Play after
-            the API has finished loading.
-        */
+          musicState.playing = false;
+
+          updateMusicUI();
 
           showToast("YouTube player is loading...");
         }
@@ -4875,8 +4897,16 @@
 
       $("runMusicToggle").addEventListener("change", (event) => {
         if (event.target.checked) {
-          playMusic();
+          /*
+           * Turning Music ON:
+           * Always use the playlist of the CURRENT block.
+           */
+          startMusicForCurrentBlock();
         } else {
+          /*
+           * Turning Music OFF:
+           * Stop playback immediately.
+           */
           pauseMusic();
         }
       });
