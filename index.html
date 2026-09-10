@@ -4019,6 +4019,8 @@
       async function closeRunScreen() {
         stopTimer();
 
+        pauseMusic();
+
         $("runScreen").classList.remove("visible");
 
         document.body.style.overflow = "";
@@ -4038,6 +4040,12 @@
    RUN TIMER
 ========================================================= */
 
+      function getCurrentElapsedMs() {
+        if (!run) return 0;
+        if (!run.running) return run.accumulatedMs || 0;
+        return (run.accumulatedMs || 0) + (Date.now() - run.blockStartedAt);
+      }
+
       function startTimer() {
         if (!run || run.completed) {
           return;
@@ -4051,6 +4059,8 @@
 
         run.pausedAt = null;
 
+        run.blockStartedAt = Date.now();
+
         timerInterval = setInterval(timerTick, 250);
 
         updateRunUI();
@@ -4060,6 +4070,10 @@
         if (!run || !run.running) {
           return;
         }
+
+        run.accumulatedMs = getCurrentElapsedMs();
+
+        run.elapsedMs = run.accumulatedMs;
 
         run.running = false;
 
@@ -4087,17 +4101,17 @@
           return;
         }
 
-        run.elapsedMs += 250;
+        run.elapsedMs = getCurrentElapsedMs();
 
         const plannedMs = run.blocks[run.blockIndex].durationMin * 60 * 1000;
 
         if (run.mode === "overtime") {
-          if (run.elapsedMs === plannedMs) {
+          if (run.elapsedMs >= plannedMs && !run.overtimeChimePlayed) {
             playChime(2);
 
-            run.overtimeMs = 0;
+            run.overtimeChimePlayed = true;
 
-            updateRunUI();
+            run.overtimeMs = 0;
           }
 
           if (run.elapsedMs > plannedMs) {
@@ -4106,6 +4120,8 @@
         } else {
           if (run.elapsedMs >= plannedMs) {
             run.elapsedMs = plannedMs;
+
+            run.accumulatedMs = plannedMs;
 
             completeCurrentBlockStrict();
           }
@@ -4143,9 +4159,15 @@
 
         run.blockIndex++;
 
+        run.accumulatedMs = 0;
+
         run.elapsedMs = 0;
 
         run.overtimeMs = 0;
+
+        run.blockStartedAt = Date.now();
+
+        run.overtimeChimePlayed = false;
 
         startMusicForCurrentBlock(true);
       }
@@ -4174,9 +4196,15 @@
 
         run.blockIndex++;
 
+        run.accumulatedMs = 0;
+
         run.elapsedMs = 0;
 
         run.overtimeMs = 0;
+
+        run.blockStartedAt = Date.now();
+
+        run.overtimeChimePlayed = false;
 
         run.running = true;
 
@@ -4206,9 +4234,15 @@
 
         run.blockIndex--;
 
+        run.accumulatedMs = 0;
+
         run.elapsedMs = 0;
 
         run.overtimeMs = 0;
+
+        run.blockStartedAt = Date.now();
+
+        run.overtimeChimePlayed = false;
 
         run.running = true;
 
@@ -4232,9 +4266,15 @@
           return;
         }
 
+        run.accumulatedMs = 0;
+
         run.elapsedMs = 0;
 
         run.overtimeMs = 0;
+
+        run.blockStartedAt = Date.now();
+
+        run.overtimeChimePlayed = false;
 
         if (!run.running) {
           run.running = true;
@@ -4270,9 +4310,15 @@
 
         run.blockIndex = 0;
 
+        run.accumulatedMs = 0;
+
         run.elapsedMs = 0;
 
         run.overtimeMs = 0;
+
+        run.blockStartedAt = Date.now();
+
+        run.overtimeChimePlayed = false;
 
         run.completed = false;
 
@@ -4345,9 +4391,15 @@
 
         run.blockIndex = 0;
 
+        run.accumulatedMs = 0;
+
         run.elapsedMs = 0;
 
         run.overtimeMs = 0;
+
+        run.blockStartedAt = Date.now();
+
+        run.overtimeChimePlayed = false;
 
         run.completed = false;
 
@@ -5083,11 +5135,11 @@
         const saved = await dbGet("currentRun");
 
         /*
-        We intentionally restore the run as PAUSED.
+    We intentionally restore the run as PAUSED.
 
-        This prevents a browser reload from unexpectedly
-        continuing the timer in the background.
-    */
+    This prevents a browser reload from unexpectedly
+    continuing the timer in the background.
+  */
 
         if (!saved || saved.completed) {
           return;
@@ -5096,6 +5148,8 @@
         run = saved;
 
         run.running = false;
+
+        run.accumulatedMs = run.elapsedMs || 0;
 
         openRunScreen();
 
